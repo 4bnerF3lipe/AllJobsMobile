@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+	x:Class="EbaresMobile.Paginas.PedidoComandaPage"
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:viewModels="clr-namespace:EbaresMobile.ViewModels.Paginas"
+	NavigationPage.HasNavigationBar="False">
+	<ContentPage.BindingContext>
+		<viewModels:PedidoComandaViewModel />
+	</ContentPage.BindingContext>
+	<Grid Margin="20,0" RowSpacing="0">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="10*" />
+			<RowDefinition Height="80*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<Label
+			Grid.Row="0"
+			FontAttributes="Bold"
+			FontSize="Title"
+			HorizontalOptions="Center"
+			Text="Pedido"
+			TextColor="Black"
+			VerticalOptions="Center" />
+		<ImageButton
+			Grid.Row="0"
+			Aspect="AspectFit"
+			BackgroundColor="Transparent"
+			Command="{Binding VoltarCommand}"
+			HeightRequest="40"
+			HorizontalOptions="Start"
+			Source="back.png"
+			VerticalOptions="Center" />
+		<Grid
+			Grid.Row="1"
+			Margin="0,0,0,15"
+			RowDefinitions="*,Auto">
+			<!--#region Lista de pedidos-->
+			<CollectionView
+				x:Name="listaProdutos"
+				Grid.Row="0"
+				Grid.RowSpan="2"
+				HorizontalOptions="FillAndExpand"
+				ItemsSource="{Binding PedidosComanda}"
+				VerticalOptions="FillAndExpand">
+				<CollectionView.EmptyView>
+					<Label
+						FontAttributes="Bold"
+						FontSize="Title"
+						HorizontalOptions="FillAndExpand"
+						HorizontalTextAlignment="Center"
+						Text="Nenhum Pedido Realizado!"
+						TextColor="Gray"
+						VerticalOptions="FillAndExpand"
+						VerticalTextAlignment="Center" />
+				</CollectionView.EmptyView>
+
+			</CollectionView>
+			<!--#endregion-->
+			<!--#region Botao para adicionar produto-->
+			<Frame
+				Grid.Row="1"
+				Padding="0"
+				BackgroundColor="Green"
+				CornerRadius="60"
+				HasShadow="False"
+				HeightRequest="60"
+				HorizontalOptions="End"
+				VerticalOptions="End"
+				WidthRequest="60">
+				<Label
+					FontAttributes="Bold"
+					FontSize="40"
+					HorizontalOptions="Center"
+					Text="+"
+					TextColor="White"
+					VerticalOptions="Center" />
+				<Frame.GestureRecognizers>
+					<TapGestureRecognizer Command="{Binding EscolhaProdutoCommand}" />
+				</Frame.GestureRecognizers>
+			</Frame>
+			<!--#endregion-->
+		</Grid>
+
+
+		<!--#region Botao para salvar-->
+		<Frame
+			Grid.Row="2"
+			Margin="0,15"
+			Padding="0"
+			BackgroundColor="Green"
+			CornerRadius="15"
+			HasShadow="False"
+			HeightRequest="65"
+			HorizontalOptions="FillAndExpand"
+			VerticalOptions="Center">
+
+			<Label
+				FontAttributes="Bold"
+				FontSize="Medium"
+				HorizontalOptions="FillAndExpand"
+				HorizontalTextAlignment="Center"
+				Text="Salvar"
+				TextColor="White"
+				VerticalOptions="FillAndExpand"
+				VerticalTextAlignment="Center" />
+
+
+			<Frame.GestureRecognizers>
+				<TapGestureRecognizer Command="{Binding SalvarPedidoCommand}" />
+			</Frame.GestureRecognizers>
+		</Frame>
+		<!--#endregion-->
+	</Grid>
+</ContentPage>

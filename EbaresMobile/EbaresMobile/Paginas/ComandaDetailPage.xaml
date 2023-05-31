@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="EbaresMobile.Paginas.ComandaDetailPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:EbaresMobile.ViewModels.Paginas"
+    xmlns:xforms="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
+    NavigationPage.HasNavigationBar="False">
+    <ContentPage.BindingContext>
+        <viewModels:ComandaDetailViewModel />
+    </ContentPage.BindingContext>
+    <Grid Margin="20,0" RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="70*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label
+            Grid.Row="0"
+            FontAttributes="Bold"
+            FontSize="20"
+            HorizontalOptions="Center"
+            Text="{Binding ComandaAtual.NomeMesa}"
+            TextColor="Black"
+            VerticalOptions="Center" />
+        <Label
+            Grid.Row="1"
+            FontAttributes="Bold"
+            FontSize="18"
+            HorizontalOptions="Center"
+            Text="{Binding ComandaAtual.NumeroComanda, StringFormat='Mesa {0}'}"
+            TextColor="Black"
+            VerticalOptions="Center" />
+        <ImageButton
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Aspect="AspectFit"
+            BackgroundColor="Transparent"
+            Command="{Binding ComandaAtual.VoltarCommand}"
+            HeightRequest="40"
+            HorizontalOptions="Start"
+            Source="back.png"
+            VerticalOptions="Center" />
+        <Grid
+            Grid.Row="2"
+            Margin="0,0,0,15"
+            IsVisible="{Binding ComandaAtual.ComandaAberta}"
+            RowDefinitions="*,Auto">
+            <xforms:SfListView
+                x:Name="listaProdutos"
+                Grid.Row="0"
+                AutoFitMode="DynamicHeight"
+                HorizontalOptions="FillAndExpand"
+                ItemSpacing="5"
+                ItemsSource="{Binding ComandaAtual.PedidosComanda}"
+                SelectionMode="None"
+                VerticalOptions="FillAndExpand">
+                <xforms:SfListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame
+                                BackgroundColor="White"
+                                BorderColor="{Binding CorEnviado}"
+                                CornerRadius="15"
+                                HasShadow="False">
+                                <Grid
+                                    ColumnDefinitions="*,*"
+                                    ColumnSpacing="0"
+                                    HorizontalOptions="FillAndExpand"
+                                    RowDefinitions="*,*,Auto"
+                                    RowSpacing="0">
+                                    <Label
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        FontAttributes="Bold"
+                                        FontSize="16"
+                                        HorizontalOptions="Center"
+                                        HorizontalTextAlignment="Center"
+                                        LineBreakMode="WordWrap"
+                                        Text="{Binding NomeProduto}"
+                                        TextColor="Black"
+                                        VerticalOptions="Center"
+                                        VerticalTextAlignment="Center" />
+
+                                    <Label
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        FontSize="Subtitle"
+                                        HorizontalOptions="FillAndExpand"
+                                        HorizontalTextAlignment="Start"
+                                        LineBreakMode="TailTruncation"
+                                        Text="{Binding Quantidade, StringFormat='Quantidade: {0}x'}"
+                                        TextColor="Black"
+                                        VerticalOptions="End" />
+                                    <Label
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        FontSize="Subtitle"
+                                        HorizontalOptions="FillAndExpand"
+                                        HorizontalTextAlignment="End"
+                                        LineBreakMode="TailTruncation"
+                                        Text="{Binding Total, StringFormat='Total: {0:c}'}"
+                                        TextColor="Black"
+                                        VerticalOptions="End" />
+                                    <Label
+                                        Grid.Row="2"
+                                        Grid.ColumnSpan="2"
+                                        FontSize="Subtitle"
+                                        HorizontalOptions="FillAndExpand"
+                                        HorizontalTextAlignment="Start"
+                                        LineBreakMode="TailTruncation"
+                                        Text="{Binding Observacao, StringFormat='Observação: {0}'}"
+                                        TextColor="Black"
+                                        VerticalOptions="End" />
+                                </Grid>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </xforms:SfListView.ItemTemplate>
+
+            </xforms:SfListView>
+            <Frame
+                Grid.Row="1"
+                Padding="0"
+                BackgroundColor="Green"
+                CornerRadius="60"
+                HasShadow="False"
+                HeightRequest="60"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                WidthRequest="60">
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="40"
+                    HorizontalOptions="Center"
+                    Text="+"
+                    TextColor="White"
+                    VerticalOptions="Center" />
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NovaComandaCommand}" />
+                </Frame.GestureRecognizers>
+            </Frame>
+            <Label
+                Grid.Row="1"
+                FontAttributes="Bold"
+                FontSize="25"
+                HorizontalOptions="Start"
+                Text="{Binding TotalPedidos, StringFormat='Total: {0:c}', Mode=TwoWay}"
+                TextColor="Black"
+                VerticalOptions="Center" />
+        </Grid>
+        <Label
+            Grid.Row="2"
+            FontAttributes="Bold"
+            FontSize="Title"
+            HorizontalOptions="FillAndExpand"
+            HorizontalTextAlignment="Center"
+            IsVisible="{Binding ComandaAtual.ComandaDisponivel}"
+            Text="Comanda pronta para abertura!"
+            TextColor="Black"
+            VerticalOptions="FillAndExpand"
+            VerticalTextAlignment="Center" />
+
+        <Frame
+            Grid.Row="3"
+            Padding="0"
+            BackgroundColor="Transparent"
+            HasShadow="False"
+            HeightRequest="80"
+            HorizontalOptions="FillAndExpand"
+            IsVisible="{Binding ComandaAtual.ComandaDisponivel}"
+            VerticalOptions="Center">
+            <Frame
+                Margin="0,10"
+                Padding="0"
+                CornerRadius="15"
+                HorizontalOptions="FillAndExpand"
+                IsEnabled="{Binding ComandaAtual.ComandaDisponivel}"
+                VerticalOptions="FillAndExpand">
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    HorizontalOptions="FillAndExpand"
+                    HorizontalTextAlignment="Center"
+                    IsEnabled="{Binding ComandaAtual.ComandaDisponivel}"
+                    TextColor="White"
+                    VerticalOptions="FillAndExpand"
+                    VerticalTextAlignment="Center">
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="Text" Value="Fechar Comanda" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="Text" Value="Abrir Comanda" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                </Label>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Disabled">
+                            <VisualState.Setters>
+
+                                <Setter Property="BackgroundColor" Value="DarkRed" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Normal">
+                            <VisualState.Setters>
+
+                                <Setter Property="BackgroundColor" Value="DarkGreen" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </Frame>
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding ComandaAtual.MudarComandaCommand}" />
+            </Frame.GestureRecognizers>
+        </Frame>
+        <!--<Frame
+			Grid.Row="3"
+			Padding="0"
+			BackgroundColor="Green"
+			HasShadow="False"
+			HeightRequest="50"
+			HorizontalOptions="FillAndExpand"
+			IsVisible="{Binding ComandaAtual.EnvioPedidos}"
+			VerticalOptions="Center">
+
+			<Label
+				FontAttributes="Bold"
+				FontSize="Medium"
+				HorizontalOptions="FillAndExpand"
+				HorizontalTextAlignment="Center"
+				Text="Enviar pedidos"
+				TextColor="White"
+				VerticalOptions="FillAndExpand"
+				VerticalTextAlignment="Center" />
+			<Frame.GestureRecognizers>
+				<TapGestureRecognizer Command="{Binding ComandaAtual.EnviarPedidosComandaCommand}" />
+			</Frame.GestureRecognizers>
+		</Frame>-->
+
+    </Grid>
+</ContentPage>

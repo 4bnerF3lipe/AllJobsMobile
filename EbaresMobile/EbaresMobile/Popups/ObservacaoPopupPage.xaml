@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage
+    x:Class="EbaresMobile.Popups.ObservacaoPopupPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
+    xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
+    xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup">
+    <Frame
+        Margin="10,0"
+        Padding="0"
+        CornerRadius="15"
+        HasShadow="False"
+        HeightRequest="250"
+        HorizontalOptions="Center"
+        VerticalOptions="Center">
+        <Grid
+            Margin="10"
+            RowDefinitions="Auto,Auto,Auto"
+            RowSpacing="0">
+            <Label
+                Grid.Row="0"
+                FontAttributes="Bold"
+                FontSize="22"
+                HorizontalOptions="Center"
+                Text="Adcionar Observação?"
+                TextColor="Black"
+                VerticalOptions="Center" />
+
+            <inputLayout:SfTextInputLayout
+                Grid.Row="1"
+                ContainerType="Outlined"
+                HorizontalOptions="FillAndExpand"
+                InputViewPadding="10"
+                OutlineCornerRadius="10"
+                VerticalOptions="Center">
+                <Editor
+                    x:Name="ObservacaoMesaEditor"
+                    HeightRequest="100"
+                    HorizontalOptions="FillAndExpand"
+                    Placeholder="Digite a Observação"
+                    VerticalOptions="FillAndExpand" />
+            </inputLayout:SfTextInputLayout>
+            <Frame
+                Grid.Row="2"
+                Padding="0"
+                BackgroundColor="DarkGreen"
+                CornerRadius="15"
+                HasShadow="False"
+                HeightRequest="50"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="Center">
+
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="18"
+                    HorizontalOptions="FillAndExpand"
+                    HorizontalTextAlignment="Center"
+                    Text="Adicionar"
+                    TextColor="White"
+                    VerticalOptions="FillAndExpand"
+                    VerticalTextAlignment="Center" />
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="AdicionarObservacao" />
+                </Frame.GestureRecognizers>
+            </Frame>
+        </Grid>
+    </Frame>
+</pages:PopupPage>

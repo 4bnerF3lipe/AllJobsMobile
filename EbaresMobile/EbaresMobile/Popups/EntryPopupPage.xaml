@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage
+	x:Class="EbaresMobile.Popups.EntryPopupPage"
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
+	xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
+	xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup">
+	<Frame
+		Margin="10,0"
+		Padding="0"
+		CornerRadius="15"
+		HasShadow="False"
+		HeightRequest="250"
+		HorizontalOptions="Center"
+		VerticalOptions="Center">
+		<Grid
+			Margin="10"
+			RowDefinitions="Auto,Auto,Auto,Auto"
+			RowSpacing="0">
+			<Label
+				Grid.Row="0"
+				FontAttributes="Bold"
+				FontSize="Title"
+				HorizontalOptions="Center"
+				Text="Abertura de Mesa"
+				TextColor="Black"
+				VerticalOptions="Center" />
+			<inputLayout:SfTextInputLayout
+				Grid.Row="1"
+				ContainerType="Outlined"
+				HorizontalOptions="FillAndExpand"
+				InputViewPadding="10"
+				OutlineCornerRadius="10"
+				VerticalOptions="Center">
+				<combobox:SfComboBox
+					x:Name="nomeVendedorComboBox"
+					HeightRequest="50"
+					HorizontalOptions="Center"
+					Watermark="Selecione o atendente" />
+			</inputLayout:SfTextInputLayout>
+			<inputLayout:SfTextInputLayout
+				Grid.Row="2"
+				ContainerType="Outlined"
+				HorizontalOptions="FillAndExpand"
+				InputViewPadding="0"
+				OutlineCornerRadius="10"
+				VerticalOptions="Center">
+				<Entry
+					x:Name="NomeMesaEntry"
+					HeightRequest="50"
+					HorizontalTextAlignment="Center"
+					Placeholder="Digite o nome do cliente"
+					VerticalTextAlignment="Center" />
+			</inputLayout:SfTextInputLayout>
+			<Frame
+				Grid.Row="3"
+				Padding="0"
+				BackgroundColor="DarkGreen"
+				CornerRadius="15"
+				HasShadow="False"
+				HeightRequest="50"
+				HorizontalOptions="FillAndExpand"
+				VerticalOptions="Center">
+
+				<Label
+					FontAttributes="Bold"
+					FontSize="Medium"
+					HorizontalOptions="FillAndExpand"
+					HorizontalTextAlignment="Center"
+					Text="Abrir Mesa"
+					TextColor="White"
+					VerticalOptions="FillAndExpand"
+					VerticalTextAlignment="Center" />
+				<Frame.GestureRecognizers>
+					<TapGestureRecognizer Tapped="AbrirMesa" />
+				</Frame.GestureRecognizers>
+			</Frame>
+		</Grid>
+	</Frame>
+</pages:PopupPage>

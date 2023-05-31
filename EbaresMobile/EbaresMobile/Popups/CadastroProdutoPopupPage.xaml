@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage
+    x:Class="EbaresMobile.Popups.CadastroProdutoPopupPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
+    xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+    xmlns:syncfusion="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
+    xmlns:viewModels="clr-namespace:EbaresMobile.ViewModels.Popup"
+    AndroidTalkbackAccessibilityWorkaround="False"
+    HasKeyboardOffset="False"
+    IsAnimating="False"
+    IsAnimationEnabled="False">
+    <pages:PopupPage.BindingContext>
+        <viewModels:CadastroProdutoPoupViewModel />
+    </pages:PopupPage.BindingContext>
+    <Frame
+        Margin="10,20"
+        CornerRadius="20"
+        HasShadow="False"
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand">
+
+        <Grid
+            Grid.Row="0"
+            RowDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto"
+            RowSpacing="0">
+            <Label
+                Grid.Row="0"
+                FontAttributes="Bold"
+                FontSize="25"
+                HorizontalOptions="Center"
+                Text="{Binding NomeMesa}"
+                TextColor="Black"
+                VerticalOptions="Center" />
+            <Label
+                Grid.Row="1"
+                FontAttributes="Bold"
+                FontSize="22"
+                HorizontalOptions="Center"
+                Text="{Binding NumeroMesa, StringFormat='Mesa {0}'}"
+                TextColor="Black"
+                VerticalOptions="Center" />
+            <Label
+                Grid.Row="2"
+                FontAttributes="Bold"
+                FontSize="18"
+                HorizontalOptions="Center"
+                Text="Seleção de Produto"
+                TextColor="Black"
+                VerticalOptions="Center" />
+            <!--#region Pesquisa-->
+            <inputLayout:SfTextInputLayout
+                Grid.Row="3"
+                ContainerType="Outlined"
+                HorizontalOptions="FillAndExpand"
+                InputViewPadding="0"
+                OutlineCornerRadius="10"
+                VerticalOptions="Center">
+                <Entry
+                    HeightRequest="50"
+                    HorizontalTextAlignment="Center"
+                    Placeholder="Digite o nome do produto"
+                    Text="{Binding CampoPesquisa}"
+                    TextChanged="PesquisaTempoReal"
+                    VerticalTextAlignment="Center" />
+            </inputLayout:SfTextInputLayout>
+            <!--#endregion-->
+
+            <!--#region Lista Produtos-->
+            <syncfusion:SfListView
+                x:Name="ListaSelecaoProduto"
+                Grid.Row="4"
+                Padding="0"
+                AutoFitMode="Height"
+                ItemSpacing="5"
+                ItemsSource="{Binding ProdutosLista}"
+                ItemsSourceChangeCachingStrategy="RecycleItems"
+                ListViewCachingStrategy="RecycleTemplate"
+                SelectionMode="None">
+                <syncfusion:SfListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame
+                                Padding="5"
+                                BorderColor="#C9C9C9"
+                                CornerRadius="10"
+                                HasShadow="False"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="FillAndExpand">
+                                <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto, 30">
+                                    <Label
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="3"
+                                        Margin="10,0"
+                                        FontAttributes="Bold"
+                                        FontSize="16"
+                                        HorizontalOptions="Center"
+                                        HorizontalTextAlignment="Center"
+                                        LineBreakMode="WordWrap"
+                                        Text="{Binding NomeProduto}"
+                                        TextColor="Black"
+                                        VerticalOptions="Center"
+                                        VerticalTextAlignment="Center" />
+                                    <ImageButton
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Aspect="AspectFit"
+                                        BackgroundColor="Transparent"
+                                        Command="{Binding Path=BindingContext.AdicionarObservacaoCommand, Source={x:Reference ListaSelecaoProduto}}"
+                                        CommandParameter="{Binding .}"
+                                        HorizontalOptions="Center"
+                                        Source="commentsolid.png"
+                                        WidthRequest="30" />
+
+                                    <Label
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        Margin="10,0"
+                                        FontSize="16"
+                                        HorizontalOptions="Start"
+                                        Text="{Binding Valor, StringFormat='{0:c}'}"
+                                        TextColor="Black" />
+
+
+                                    <Grid
+                                        Grid.Row="1"
+                                        Grid.Column="2"
+                                        ColumnDefinitions="*,*,*"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Center">
+                                        <Button
+                                            Grid.Column="0"
+                                            Padding="0"
+                                            BackgroundColor="DarkRed"
+                                            Command="{Binding Path=BindingContext.DiminuirQuantidadeCommand, Source={x:Reference ListaSelecaoProduto}}"
+                                            CommandParameter="{Binding .}"
+                                            CornerRadius="5"
+                                            FontAttributes="Bold"
+                                            FontSize="15"
+                                            HeightRequest="30"
+                                            Text="-"
+                                            TextColor="White"
+                                            WidthRequest="30" />
+                                        <Label
+                                            Grid.Column="1"
+                                            Padding="0"
+                                            FontAttributes="Bold"
+                                            FontSize="18"
+                                            HorizontalOptions="Center"
+                                            Text="{Binding Quantidade}"
+                                            TextColor="Black" />
+                                        <Button
+                                            Grid.Column="2"
+                                            Padding="0"
+                                            BackgroundColor="Green"
+                                            Command="{Binding Path=BindingContext.AdicionarQuantidadeCommand, Source={x:Reference ListaSelecaoProduto}}"
+                                            CommandParameter="{Binding .}"
+                                            CornerRadius="5"
+                                            FontAttributes="Bold"
+                                            FontSize="15"
+                                            HeightRequest="30"
+                                            Text="+"
+                                            TextColor="White"
+                                            WidthRequest="30" />
+                                    </Grid>
+
+                                </Grid>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </syncfusion:SfListView.ItemTemplate>
+
+            </syncfusion:SfListView>
+            <!--#endregion-->
+            <Label
+                Grid.Row="5"
+                FontAttributes="Bold"
+                FontSize="20"
+                HorizontalOptions="FillAndExpand"
+                HorizontalTextAlignment="Center"
+                Text="{Binding TotalPedidos, StringFormat='Total: {0:c}'}"
+                TextColor="Black"
+                VerticalOptions="Center" />
+            <!--#region Adicionar/Remover Quantidade-->
+
+            <!--#endregion-->
+
+            <!--#region Botao salvar-->
+            <Frame
+                Grid.Row="6"
+                Padding="0"
+                BackgroundColor="Green"
+                CornerRadius="15"
+                HasShadow="False"
+                HeightRequest="50"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="Center">
+
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Medium"
+                    HorizontalOptions="FillAndExpand"
+                    HorizontalTextAlignment="Center"
+                    Text="Adicionar"
+                    TextColor="White"
+                    VerticalOptions="FillAndExpand"
+                    VerticalTextAlignment="Center" />
+
+
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Salvar" />
+                </Frame.GestureRecognizers>
+            </Frame>
+            <!--#endregion-->
+        </Grid>
+    </Frame>
+</pages:PopupPage>

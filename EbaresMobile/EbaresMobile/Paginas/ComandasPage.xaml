@@ -1,0 +1,343 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="EbaresMobile.Paginas.ComandasPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
+    xmlns:syncfusion="clr-namespace:Syncfusion.SfPullToRefresh.XForms;assembly=Syncfusion.SfPullToRefresh.XForms"
+    xmlns:viewModels="clr-namespace:EbaresMobile.ViewModels.Paginas"
+    NavigationPage.HasNavigationBar="False">
+    <ContentPage.BindingContext>
+        <viewModels:ComandaViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <Grid>
+            <Grid Margin="20,0" RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10*" />
+                    <RowDefinition Height="10*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="70*" />
+                </Grid.RowDefinitions>
+                <Label
+                    Grid.Row="0"
+                    FontAttributes="Bold"
+                    FontSize="Title"
+                    HorizontalOptions="Center"
+                    Text="AllJobs Mobile"
+                    TextColor="Black"
+                    VerticalOptions="Center" />
+                <Grid
+                    Grid.Row="1"
+                    Margin="0,0,0,10"
+                    ColumnDefinitions="*,*">
+                    <Grid Grid.Column="0">
+
+                        <Frame
+                            Padding="0"
+                            BackgroundColor="White"
+                            BorderColor="Green"
+                            CornerRadius="15"
+                            HasShadow="False"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center">
+                            <Grid
+                                Margin="5"
+                                HorizontalOptions="Fill"
+                                RowDefinitions="Auto,Auto"
+                                VerticalOptions="Fill">
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    FontAttributes="Bold"
+                                    FontSize="Medium"
+                                    HorizontalOptions="Center"
+                                    Text="Disponíveis"
+                                    TextColor="DarkGreen" />
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    FontAttributes="Bold"
+                                    FontSize="Subtitle"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding Disponiveis}"
+                                    TextColor="DarkGreen" />
+                            </Grid>
+                        </Frame>
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <Frame
+                            Padding="0"
+                            BorderColor="Red"
+                            CornerRadius="15"
+                            HasShadow="False"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center">
+                            <Grid
+                                Grid.Column="1"
+                                Margin="5"
+                                RowDefinitions="Auto,Auto">
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    FontAttributes="Bold"
+                                    FontSize="Medium"
+                                    HorizontalOptions="Center"
+                                    Text="Ocupadas"
+                                    TextColor="Red" />
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    FontAttributes="Bold"
+                                    FontSize="Subtitle"
+                                    HorizontalOptions="FillAndExpand"
+                                    HorizontalTextAlignment="Center"
+                                    Text="{Binding Ocupados}"
+                                    TextColor="Red"
+                                    VerticalOptions="FillAndExpand"
+                                    VerticalTextAlignment="Start" />
+                            </Grid>
+                        </Frame>
+                    </Grid>
+                </Grid>
+                <Grid
+                    Grid.Row="2"
+                    Margin="0,0,0,0"
+                    ColumnDefinitions="Auto,*,Auto"
+                    RowDefinitions="Auto,Auto">
+                    <Label
+                        Grid.Row="0"
+                        Grid.ColumnSpan="3"
+                        FontAttributes="Bold"
+                        FontSize="18"
+                        HorizontalOptions="Center"
+                        Text="Busca Rápida"
+                        TextColor="Black"
+                        VerticalOptions="Center" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        HorizontalOptions="Center"
+                        Text="Mesa: "
+                        TextColor="Black"
+                        VerticalOptions="Center" />
+
+                    <inputLayout:SfTextInputLayout
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        ContainerType="Outlined"
+                        HorizontalOptions="FillAndExpand"
+                        InputViewPadding="0"
+                        OutlineCornerRadius="10"
+                        VerticalOptions="Center">
+                        <Entry
+                            HeightRequest="35"
+                            HorizontalTextAlignment="Center"
+                            Keyboard="Numeric"
+                            Text="{Binding Mesa}"
+                            VerticalTextAlignment="Center" />
+                    </inputLayout:SfTextInputLayout>
+
+                    <ImageButton
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Aspect="AspectFit"
+                        BackgroundColor="Transparent"
+                        Command="{Binding BuscarMesaCommand}"
+                        CornerRadius="15"
+                        HeightRequest="30"
+                        HorizontalOptions="Center"
+                        Source="pesquisa.png"
+                        VerticalOptions="Center"
+                        WidthRequest="30" />
+                </Grid>
+
+                <Grid
+                    Grid.Row="3"
+                    Margin="0,0,0,10"
+                    RowDefinitions="Auto,*"
+                    RowSpacing="0">
+                    <Label
+                        Grid.Row="0"
+                        FontAttributes="Bold"
+                        FontSize="Medium"
+                        HorizontalOptions="Start"
+                        Text="Mesas:"
+                        TextColor="Black"
+                        VerticalOptions="Center" />
+                    <syncfusion:SfPullToRefresh
+                        Grid.Row="1"
+                        IsRefreshing="{Binding IsRefreshing}"
+                        ProgressBackgroundColor="Transparent"
+                        ProgressStrokeColor="Black"
+                        PullingThreshold="100"
+                        RefreshCommand="{Binding AtualizarCommand}"
+                        RefreshContentHeight="50"
+                        RefreshContentWidth="50">
+                        <syncfusion:SfPullToRefresh.PullableContent>
+                            <CollectionView
+                                x:Name="listaComandas"
+                                Margin="0,10"
+                                ItemsSource="{Binding ListaComandas}"
+                                ItemsUpdatingScrollMode="KeepItemsInView">
+                                <CollectionView.ItemsLayout>
+                                    <GridItemsLayout
+                                        HorizontalItemSpacing="10"
+                                        Orientation="Vertical"
+                                        Span="2"
+                                        VerticalItemSpacing="10" />
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+
+                                        <Frame
+                                            Grid.Row="1"
+                                            Padding="5"
+                                            BorderColor="Gray"
+                                            CornerRadius="15"
+                                            HasShadow="False"
+                                            HeightRequest="100"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="Center"
+                                            WidthRequest="100">
+                                            <Grid
+                                                HorizontalOptions="FillAndExpand"
+                                                RowDefinitions="*,Auto,Auto"
+                                                RowSpacing="0"
+                                                VerticalOptions="FillAndExpand">
+                                                <Image
+                                                    Grid.Row="0"
+                                                    Aspect="AspectFit"
+                                                    BackgroundColor="White"
+                                                    HeightRequest="40"
+                                                    HorizontalOptions="Center"
+                                                    IsEnabled="{Binding ComandaDisponivel}"
+                                                    VerticalOptions="Center"
+                                                    WidthRequest="40">
+                                                    <VisualStateManager.VisualStateGroups>
+                                                        <VisualStateGroup x:Name="CommonStates">
+                                                            <VisualState x:Name="Normal">
+                                                                <VisualState.Setters>
+                                                                    <Setter Property="Source" Value="mesavazia.png" />
+                                                                </VisualState.Setters>
+                                                            </VisualState>
+                                                            <VisualState x:Name="Disabled">
+                                                                <VisualState.Setters>
+                                                                    <Setter Property="Source" Value="mesaocupada.png" />
+                                                                </VisualState.Setters>
+                                                            </VisualState>
+                                                        </VisualStateGroup>
+                                                    </VisualStateManager.VisualStateGroups>
+                                                </Image>
+                                                <Label
+                                                    Grid.Row="1"
+                                                    Margin="0"
+                                                    FontAttributes="Bold"
+                                                    FontSize="Medium"
+                                                    HorizontalOptions="Center"
+                                                    HorizontalTextAlignment="Center"
+                                                    Text="{Binding NumeroComanda, StringFormat='Mesa {0}'}"
+                                                    TextColor="Black"
+                                                    VerticalOptions="Center" />
+                                                <Label
+                                                    Grid.Row="2"
+                                                    Margin="0"
+                                                    FontAttributes="Bold"
+                                                    FontSize="Medium"
+                                                    HorizontalOptions="Center"
+                                                    HorizontalTextAlignment="Center"
+                                                    Text="{Binding NomeMesa}"
+                                                    TextColor="Black"
+                                                    VerticalOptions="Center" />
+                                            </Grid>
+                                            <Frame.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding AbrirDetalheComandaCommand}" CommandParameter="{Binding .}" />
+                                            </Frame.GestureRecognizers>
+                                        </Frame>
+
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </syncfusion:SfPullToRefresh.PullableContent>
+                    </syncfusion:SfPullToRefresh>
+                </Grid>
+            </Grid>
+            <Grid BackgroundColor="LightGray" IsVisible="{Binding InformaIp}">
+                <Frame
+                    Margin="10,0"
+                    Padding="10"
+                    BackgroundColor="White"
+                    CornerRadius="15"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="Center">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto">
+                        <Label
+                            Grid.Row="0"
+                            FontAttributes="Bold"
+                            FontSize="Title"
+                            HorizontalOptions="Center"
+                            Text="Conexão"
+                            TextColor="Black"
+                            VerticalOptions="Center" />
+
+                        <inputLayout:SfTextInputLayout
+                            Grid.Row="1"
+                            ContainerType="Outlined"
+                            HorizontalOptions="FillAndExpand"
+                            InputViewPadding="0"
+                            OutlineCornerRadius="10"
+                            VerticalOptions="Center">
+                            <Entry
+                                HeightRequest="50"
+                                HorizontalTextAlignment="Center"
+                                Keyboard="Telephone"
+                                Placeholder="Digite o ip do servidor"
+                                Text="{Binding Ip}"
+                                VerticalTextAlignment="Center" />
+                        </inputLayout:SfTextInputLayout>
+                        <inputLayout:SfTextInputLayout
+                            Grid.Row="2"
+                            ContainerType="Outlined"
+                            HorizontalOptions="FillAndExpand"
+                            InputViewPadding="0"
+                            OutlineCornerRadius="10"
+                            VerticalOptions="Center">
+                            <Entry
+                                HeightRequest="50"
+                                HorizontalTextAlignment="Center"
+                                IsPassword="True"
+                                Placeholder="Informe a senha do banco"
+                                Text="{Binding SenhaBanco}"
+                                VerticalTextAlignment="Center" />
+                        </inputLayout:SfTextInputLayout>
+                        <Frame
+                            Grid.Row="3"
+                            Padding="0"
+                            BackgroundColor="DarkGreen"
+                            CornerRadius="15"
+                            HasShadow="False"
+                            HeightRequest="50"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="Center">
+
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="Medium"
+                                HorizontalOptions="FillAndExpand"
+                                HorizontalTextAlignment="Center"
+                                Text="Conectar"
+                                TextColor="White"
+                                VerticalOptions="FillAndExpand"
+                                VerticalTextAlignment="Center" />
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ConectarCommand}" />
+                            </Frame.GestureRecognizers>
+                        </Frame>
+                    </Grid>
+                </Frame>
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
