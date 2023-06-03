@@ -32,11 +32,12 @@ namespace EbaresMobile.ViewModels.Paginas
         private string mesa;
         private List<Comanda> _listaGeral;
         private ObservableCollection<Comanda> _listaComandas;
+        private bool demo;
         #endregion
 
         #region Encapsulamento
-        public string Ip { get { return ip; } set { ip = value; } }
-        public string SenhaBanco { get { return senhaBanco; } set { senhaBanco = value; } }
+        public string Ip { get { return ip; } set { ip = value; OnPropertyChanged("Ip"); } }
+        public string SenhaBanco { get { return senhaBanco; } set { senhaBanco = value; OnPropertyChanged("SenhaBanco"); } }
         public string Mesa { get { return mesa; } set { mesa = value; OnPropertyChanged("Mesa"); } }
         public bool IsRefreshing { get { return _isRefreshing; } set { _isRefreshing = value; OnPropertyChanged("IsRefreshing"); } }
         public int Disponiveis { get { return ListaComandas != null ? ListaComandas.Count((item) => item.ComandaDisponivel) : 0; } }
@@ -134,10 +135,8 @@ namespace EbaresMobile.ViewModels.Paginas
         #region Construtor 
         public ComandaViewModel()
         {
-            if (Preferences.ContainsKey("SenhaBanco"))
-            {
-                SenhaBanco = Preferences.Get("SenhaBanco", null);
-            }
+            Ip = "127.0.0.1";
+            SenhaBanco = "SenhaBancoAqui";
         }
         #endregion
         #region Metodos
@@ -147,45 +146,13 @@ namespace EbaresMobile.ViewModels.Paginas
             try
             {
                 UserDialogs.Instance.ShowLoading("Verificando IP...");
-                var statusService = new StatusService();
-                var con = await statusService.VerificaStatus();
-                if (con)
-                {
-                    UserDialogs.Instance.ShowLoading("Verificando Conexão com o Banco...");
-                    var conBanco = await statusService.VerificaSenhaBanco(SenhaBanco);
-                    if (conBanco)
-                    {
-                        Preferences.Set("Host", App.BaseUrl.BaseAddress.Host);
-                        Preferences.Set("SenhaBanco", SenhaBanco);
-                        InformaIp = false;
-                        await AtualizaMesas();
-                    }
-                    else
-                    {
-                        App.CarregaConfigWeb();
-                        Preferences.Remove("Host");
-                        Preferences.Remove("SenhaBanco");
-                        InformaIp = true;
-                        UserDialogs.Instance.Alert("Não foi possivel conectar, verifique a senha do banco!", "Atenção", "OK");
-                    }
-                }
-                else
-                {
-                    App.CarregaConfigWeb();
-                    Preferences.Remove("Host");
-                    Preferences.Remove("SenhaBanco");
-                    InformaIp = true;
-                    UserDialogs.Instance.Alert("Não foi possivel conectar, verifique o endereço IP!", "Atenção", "OK");
-                }
+                await Task.Delay(1500);
+                UserDialogs.Instance.ShowLoading("Verificando Conexão com o Banco...");
+                await Task.Delay(1500);
+                await AtualizaMesas();
             }
             catch (Exception ex)
             {
-                App.CarregaConfigWeb();
-                Preferences.Remove("Host");
-                Preferences.Remove("SenhaBanco");
-                InformaIp = true;
-                UserDialogs.Instance.Alert("Não foi possível verificar a conexão!", "Atenção", "OK");
-
             }
         }
         public async void CarregaDados()
@@ -194,22 +161,16 @@ namespace EbaresMobile.ViewModels.Paginas
             try
             {
                 _listaGeral = new List<Comanda>();
-                for (int i = 0; i < 60; i++)
+                for (int i = 0; i < 180; i++)
                 {
                     var comanda = new Comanda(true, i + 1, Navigation, this);
                     _listaGeral.Add(comanda);
                 }
                 ListaComandas = new ObservableCollection<Comanda>(_listaGeral);
+                await AtualizaMesas();
                 OnPropertyChanged("Disponiveis");
                 OnPropertyChanged("Ocupados");
-                if (App.BaseUrl == null || App.BaseUrl.BaseAddress == null || string.IsNullOrEmpty(App.BaseUrl.BaseAddress.Host))
-                {
-                    InformaIp = true;
-                }
-                else
-                {
-                    await VerificaConexao();
-                }
+
             }
             catch (Exception ex)
             {
@@ -226,35 +187,32 @@ namespace EbaresMobile.ViewModels.Paginas
             try
             {
                 var result = new TaskCompletionSource<bool>();
-                if (!InformaIp)
+
+                UserDialogs.Instance.ShowLoading("Atualizando mesas...");
+                var mesaService = new MesaService();
+                ListaComandas.ToList().ForEach(i =>
+                { i.ComandaDisponivel = true; i.NomeMesa = null; });
+                var consulta = App.MesasOcupadas;
+                if (consulta != null && consulta.Count > 0)
                 {
-                    UserDialogs.Instance.ShowLoading("Atualizando mesas...");
-                    var mesaService = new MesaService();
-                    ListaComandas.ToList().ForEach(i =>
-                    { i.ComandaDisponivel = true; i.NomeMesa = null; });
-                    var consulta = await mesaService.BuscarMesasOcupadas();
-                    if (consulta != null && consulta.Count > 0)
+                    foreach (var item in consulta)
                     {
-                        foreach (var item in consulta)
+                        var mesa = ListaComandas.FirstOrDefault(i => i.NumeroComanda == item.Numero);
+                        if (mesa != null)
                         {
-                            var mesa = ListaComandas.FirstOrDefault(i => i.NumeroComanda == item.Numero);
-                            if (mesa != null)
-                            {
-                                mesa.NomeMesa = item.Nome;
-                                mesa.ComandaDisponivel = false;
-                                mesa.NumeroPedido = item.Pedido;
-                            }
+                            mesa.NomeMesa = item.Nome;
+                            mesa.ComandaDisponivel = false;
+                            mesa.NumeroPedido = item.Pedido;
                         }
-                        OnPropertyChanged("Disponiveis");
-                        OnPropertyChanged("Ocupados");
-                        OnPropertyChanged("ListaComandas");
-                        result.SetResult(true);
                     }
-                    else
-                        result.SetResult(true);
+                    OnPropertyChanged("Disponiveis");
+                    OnPropertyChanged("Ocupados");
+                    OnPropertyChanged("ListaComandas");
+                    result.SetResult(true);
                 }
                 else
-                    result.SetResult(false);
+                    result.SetResult(true);
+
                 return await result.Task;
             }
             catch (Exception ex)

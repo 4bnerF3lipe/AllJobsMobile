@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using Xamarin.Forms;
 using EbaresMobile.ViewModels.Paginas;
+using System.Threading.Tasks;
 
 namespace EbaresMobile.Models
 {
@@ -84,8 +85,9 @@ namespace EbaresMobile.Models
             try
             {
                 UserDialogs.Instance.ShowLoading("Atualizando mesas...");
+                await Task.Delay(1500);
                 var mesaService = new MesaService();
-                var consulta = await mesaService.BuscarMesasOcupadas();
+                var consulta = App.MesasOcupadas;
                 if (consulta != null && consulta.Count > 0)
                 {
 
@@ -161,6 +163,7 @@ namespace EbaresMobile.Models
                 NumeroComanda = result.Numero;
                 NumeroPedido = result.Pedido;
                 ComandaDisponivel = false;
+                App.AdicionaMesa(result);
             }
             catch (Exception ex)
             {
@@ -194,11 +197,16 @@ namespace EbaresMobile.Models
                 if (!ComandaDisponivel)
                 {
                     UserDialogs.Instance.ShowLoading("Atualizando comanda...");
-                    _produtoService = new ProdutoService();
-                    var consulta = await _produtoService.BuscaProdutosPeloPedido(NumeroPedido);
-                    consulta.ForEach(x => { x.Enviado = true; });
-                    this.PedidosComanda = new ObservableCollection<Produto>(consulta);
-                    ComandaDetailViewModel.AtualizaTotalPedidos();
+                    var mesa = App.MesasOcupadas.FirstOrDefault(i => i.Numero == NumeroComanda);
+                    if (mesa != null)
+                    {
+                        var consulta = mesa.Produtos;
+                        consulta.ForEach(x => { x.Enviado = true; });
+                        this.PedidosComanda = new ObservableCollection<Produto>(consulta);
+
+                        ComandaDetailViewModel.AtualizaTotalPedidos();
+                    }
+
                 }
 
             }

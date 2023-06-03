@@ -32,8 +32,26 @@ namespace EbaresMobile.Popups
             try
             {
                 UserDialogs.Instance.ShowLoading("Buscando Atendentes...");
+                await Task.Delay(1500);
                 var service = new VendedorService();
-                consulta = await service.BuscarAtendentes();
+                consulta = new List<Atendente>()
+                {
+                    new Atendente()
+                    {
+                        Id = 1,
+                        Nome = "Atendente 1"
+                    },
+                    new Atendente()
+                    {
+                         Id = 2,
+                         Nome = "Atendente 2",
+                    },
+                     new Atendente()
+                    {
+                         Id = 3,
+                         Nome = "Atendente 3",
+                    },
+                };
 
                 if (consulta != null && consulta.Count > 0)
                 {
@@ -62,7 +80,7 @@ namespace EbaresMobile.Popups
                 var nome = NomeMesaEntry.Text;
                 if (string.IsNullOrEmpty(nome))
                     throw new Exception("Digite um nome para a mesa");
-                if(nomeVendedorComboBox.SelectedItem == null)
+                if (nomeVendedorComboBox.SelectedItem == null)
                     throw new Exception("Selecione um vendedor");
                 var vendedor = consulta.FirstOrDefault(item => item.Nome == nomeVendedorComboBox.SelectedItem.ToString());
                 var mesa = new Mesa()
@@ -72,14 +90,11 @@ namespace EbaresMobile.Popups
                     Numero = _numero,
                 };
                 UserDialogs.Instance.ShowLoading("Abrindo comanda...");
-            var result =  await service.AbrirComanda(mesa);
-                if (result!= -1)
-                {
-                    mesa.Pedido = result;
-                    Retorno(mesa);
-                }
-                else
-                    throw new Exception("Não foi possivel abrir a comanda!");
+                Random rnd = new Random();
+                int num = rnd.Next();
+                mesa.Pedido = num;
+                Retorno(mesa);
+
                 await PopupNavigation.Instance.PopAsync(false);
             }
             catch (Exception ex)

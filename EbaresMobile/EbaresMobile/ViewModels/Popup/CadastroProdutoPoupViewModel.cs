@@ -139,8 +139,8 @@ namespace EbaresMobile.ViewModels.Popup
             try
             {
                 UserDialogs.Instance.ShowLoading("Buscando Produtos...");
-                _produtoService = new ProdutoService();
-                var consulta = await _produtoService.BuscarProdutos();
+                await Task.Delay(3000);
+                var consulta = App.ListaProdutos;
                 if (consulta != null && consulta.Count > 0)
                 {
                     _listaGeral = consulta;
